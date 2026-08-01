@@ -21,41 +21,29 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "21"
-
-      - name: Make Gradle wrapper executable
-        run: chmod +x gradlew
+          java-version: '21'
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
 
       - name: Verify source files
         run: |
-          echo "Repository files:"
           find . -maxdepth 8 -type f | sort
-
           test -f build.gradle
-          test -f gradle.properties
           test -f settings.gradle
-          test -f gradlew
-
+          test -f gradle.properties
           test -f src/main/java/com/seo/happyghastloader/HappyGhastChunkLoader.java
           test -f src/main/resources/fabric.mod.json
 
       - name: Build
-        run: ./gradlew clean build --stacktrace --info
-
-      - name: Show build outputs
-        run: |
-          echo "Generated JARs:"
-          ls -lh build/libs
-          for jar_file in build/libs/*.jar; do
-            echo "===== $jar_file ====="
-            unzip -l "$jar_file"
-          done
+        run: gradle clean build --stacktrace --info
 
       - name: Verify mod JAR
         run: |
+          ls -lh build/libs
+
           MOD_JAR=$(find build/libs \
             -maxdepth 1 \
             -type f \
@@ -64,13 +52,7 @@ jobs:
             ! -name "*-dev.jar" \
             | head -n 1)
 
-          if [ -z "$MOD_JAR" ]; then
-            echo "No release mod JAR was generated."
-            exit 1
-          fi
-
-          echo "Checking $MOD_JAR"
-
+          test -n "$MOD_JAR"
           unzip -l "$MOD_JAR" | grep -q "fabric.mod.json"
           unzip -l "$MOD_JAR" | grep -q \
             "com/seo/happyghastloader/HappyGhastChunkLoader.class"
