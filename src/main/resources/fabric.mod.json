@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "happyghastchunkloader",
+  "version": "${version}",
+  "name": "Happy Ghast Chunk Loader",
+  "description": "Tracks registered Happy Ghasts and keeps their current and next chunks entity-ticking.",
+  "authors": ["Seo"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "com.seo.happyghastloader.HappyGhastChunkLoader"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
